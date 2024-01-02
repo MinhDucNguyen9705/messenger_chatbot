@@ -1,6 +1,8 @@
 from flask import Flask, request
 import requests
- 
+from chat import chatbot
+from chatterbot import ChatBot
+
 app = Flask(__name__)
  
 # This is page access token that you get from facebook developer console.
@@ -34,7 +36,7 @@ def fbwebhook():
         sender_id = data['entry'][0]['messaging'][0]['sender']['id']
         print(message)
         print(sender_id)
-        text = message_process(message['text'])
+        text = str(chatbot(message))
         print(text)
         request_body = {
             "recipient": {
@@ -44,6 +46,7 @@ def fbwebhook():
                 "text": text
             }
         }
+        print(request_body)
         response = requests.post(API, json=request_body).json()
         print(response)
         message_send(sender_id, text)
